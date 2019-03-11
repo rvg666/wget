@@ -1,33 +1,46 @@
 #include <iostream>
 #include "network.h"
 
-using SA = sockaddr;
-
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     std::cerr << "Url command line parameter is required\n";
     return 1;
   }
 
+  /*argv[1] =
+      "https://dl.bintray.com/boostorg/release/1.69.0/source/"
+      "boost_1_69_0.tar.gz"; //*/
+
+  argv[1] = "dl.bintray.com";
   struct addrinfo hints;
   struct addrinfo *result, *rp;
 
-  memset(&hints, 0, sizeof(hints));
+  bzero(&hints, sizeof(hints));
+
   hints.ai_family = AF_UNSPEC;
-  hints.ai_socktype = SOCK_STREAM;
+  // hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_PASSIVE;
   hints.ai_protocol = 0; /* Any protocol */
   hints.ai_canonname = nullptr;
   hints.ai_addr = nullptr;
   hints.ai_next = nullptr;
 
-  int s = getaddrinfo(nullptr, argv[1], &hints, &result);
-  if (s != 0) {
-    std::cerr << std::strerror(errno) << std::endl;
+  std::cout << "Starting download from: " << argv[1] << std::endl;
+  auto status = getaddrinfo(argv[1], nullptr, /*nullptr*/ &hints, &result);
+  if (status != 0) {
+    std::cerr << "Error: " << hstrerror(h_errno) << std::endl;
     return 1;
   }
 
-  int sock_fd;
+  auto it = result;
+  while (it != nullptr) {
+    std::cout << "Canonname: " << it->ai_protocol << std::endl;
+    it = it->ai_next;
+  }
+
+  freeaddrinfo(result);  // free the linked list
+
+  /*int sock_fd;
   ssize_t n;
   char recv_line[MAXLINE + 1];
   struct sockaddr_in servaddr;
@@ -58,7 +71,7 @@ int main(int argc, char *argv[]) {
 
   if (n < 0) {
     std::cerr << "Read error" << std::strerror(errno) << std::endl;
-  }
+  }*/
 
   return 0;
 }

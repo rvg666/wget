@@ -6,6 +6,7 @@ set (srcs
 
 add_executable(my_wget ${srcs})
 
-target_compile_definitions(
+target_compile_definitions(my_wget
+PRIVATE
     __POSIX
-    )
+)

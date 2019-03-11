@@ -1,5 +1,7 @@
 #pragma once
 // #include "../config.h" /
+#include <arpa/inet.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,11 +11,13 @@
 #include <clocale>
 #include <cstring>
 
-#include <netdb.h>
+using SA = sockaddr;
+
+// char* sock_ntop()
+
 //#include <sys/time.h>
 //#include <ctime>
 
-//#include <arpa/inet.h>
 //#include <fcntl.h>
 //#include <netdb.h>
 //#include <signal.h>
